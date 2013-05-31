@@ -1,6 +1,8 @@
 #!/usr/bin/env python
+import distribute_setup
+distribute_setup.use_setuptools()
 
-from distutils.core import setup
+from setuptools import setup, find_packages
 
 setup(
     name='SmashPuttTwitterBox',
@@ -8,17 +10,17 @@ setup(
     description="A Twitter Box for Smash Putt",
     license='Python',
     platforms=['POSIX'],
-    requires=[
+    install_requires=[
         'tweepy',
-        'pygame',
-        'RPi.GPIO',
+        # 'pygame',
     ],
+    extras_require={
+        'RPi': ['RPi.GPIO'],
+    },
     author='Andrew Cole',
-    author_email='aocole@aocole.net',
+    author_email='aocole@gmail.com',
     url='https://github.com/aocole/SmashPuttTwitterBox',
-    packages=[
-        'SmashPuttTwitterBox',
-    ],
+    packages=find_packages(),
     scripts=[
         'scripts/smashputttwitterbox',
     ],
