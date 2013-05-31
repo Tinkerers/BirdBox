@@ -12,9 +12,11 @@ import time
 import os
 from watcher import Watcher
 from printer import Printer
+from server import HTTPServer
 import sys
 import traceback
 import settings
+import threading
 
 def main():
 	# Setup Logging
@@ -53,6 +55,7 @@ def main():
 	
 	watcher = None
 	printer = None
+	server = None
 	loops = 0
 	while True:
 		try:
@@ -72,6 +75,16 @@ def main():
 				printer = Printer(queue, logger, PI)
 				printer.setDaemon(True)
 				printer.start()
+
+			if not server or not server.is_alive():
+				logger.info("Starting HTTP server")
+				http = HTTPServer(server_address=("",8080))
+				server = threading.Thread(target=http.serve_forever())
+				server.setDaemon(True)
+				server.start()
+				while True:
+					server.join(60)
+
 
 			# Throw some info in the queue if it's getting low
 			if queue.qsize() == 0:
