@@ -2,4 +2,7 @@
 .DS_Store
 local_settings.py
 twitterbox.log
-
+SmashPuttTwitterBox.egg-info/
+dist/
+distribute-*.egg
+distribute-*.tar.gz
