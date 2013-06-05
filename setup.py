@@ -12,6 +12,7 @@ setup(
     platforms=['POSIX'],
     install_requires=[
         'tweepy',
+        'cherrypy',
         # 'pygame',
     ],
     extras_require={
