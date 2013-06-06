@@ -1,20 +1,27 @@
 # Twitter settings
-CONSUMER_KEY="your consumer key"
-CONSUMER_SECRET="your consumer secret"
+CONSUMER_KEY = "your consumer key"
+CONSUMER_SECRET = "your consumer secret"
 ACCESS_KEY = "your acces key"
 ACCESS_SECRET = "your access secret"
-TRACK=["what", "you want", "to", "track"]
-SCREEN_NAME="yourtwitterid"
+TRACK = ["what", "you want", "to", "track"]
+SCREEN_NAME = "yourtwitterid"
 
 # Log file
-LOG="twitterbox.log"
-DEBUG=False
+LOG = "twitterbox.log"
+DEBUG = False
 
 # Messages to display
-MSG_FILE="messages.txt"
+MSG_FILE = "messages.txt"
 
 # Camera attached?
-CAMERA=True
+CAMERA = True
+
+# Video output
+FONT = "Droid Sans Mono"
+FONT_SIZE = 60
+FONT_COLOR = "red"
+BACKGROUND_COLOR = "black"
+
 
 # Where did you plug in the light?
 LIGHT_PIN = 4

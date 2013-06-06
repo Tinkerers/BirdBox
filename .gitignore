@@ -5,3 +5,9 @@ twitterbox.log
 SmashPuttTwitterBox.egg-info/
 dist/
 distribute-*.tar.gz
+bin/
+include/
+lib/
+messages.txt
+pip-log.txt
+*.sublime-*

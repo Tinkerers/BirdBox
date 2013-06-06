@@ -27,10 +27,10 @@ class Video(threading.Thread):
 		self.height = 768
 		flags = 0 #pygame.DOUBLEBUF | pygame.HWSURFACE | pygame.FULLSCREEN
 		self.screen = pygame.display.set_mode((self.width, self.height), flags)
-		font_size = 60
+		font_size = settings.FONT_SIZE
 		font_width = font_size * 0.68956
 		font_width = font_size * 0.7
-		self.font = pygame.font.SysFont("Droid Sans Mono", font_size, bold=1)
+		self.font = pygame.font.SysFont(settings.FONT, font_size, bold=1)
 		self.line_length = self.width/font_width
 
 
@@ -43,8 +43,9 @@ class Video(threading.Thread):
 		self.bigSurface = None
 		self.pause = False
 
-		self.foregroundColor = pygame.Color(255, 0, 0)
-		self.black = pygame.Color(0, 0, 0)
+		self.foregroundColor = pygame.Color(settings.FONT_COLOR)
+		self.backgroundColor = pygame.Color(settings.BACKGROUND_COLOR)
+		self.black = pygame.Color(0, 0, 0, 100)
 		self.shadowShade = 0
 
 	def run(self):
@@ -78,7 +79,7 @@ class Video(threading.Thread):
 							self.bigSurface = pygame.transform.scale(self.surface, (self.width, self.height))
 					else:
 						self.bigSurface = pygame.Surface((self.width, self.height))
-						self.bigSurface.fill(self.black)
+						self.bigSurface.fill(self.backgroundColor)
 
 					if self.bigSurface != None:
 						self.screen.blit(self.bigSurface, (0,0))
