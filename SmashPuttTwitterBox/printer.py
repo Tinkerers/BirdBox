@@ -20,7 +20,7 @@ class Printer(threading.Thread):
 
 	#----------------------------------------------------------------------
 
-	def blink():
+	def blink(self):
 		GPIO.output(LIGHT_PIN_1, GPIO.LOW)
 		GPIO.output(LIGHT_PIN_2, GPIO.LOW)
 		t0 = time.time()
