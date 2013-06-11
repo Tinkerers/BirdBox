@@ -2,6 +2,9 @@ import threading
 import settings
 import cherrypy
 
+cherrypy.config.update({'server.socket_host': '0.0.0.0',
+                        'server.socket_port': 80,
+                       })
 
 class HelloWorld:
 	def __init__(self, queue):
