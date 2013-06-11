@@ -73,7 +73,7 @@ class Printer(threading.Thread):
 				# If we should turn the light on, do it
 				if (alert):
 					if self.pi:
-						blink()
+						self.blink()
 					else:
 						time.sleep(LIGHT_RUN_TIME)
 				else:
