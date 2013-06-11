@@ -38,5 +38,6 @@ PRIORITY_HIGH = 1
 
 import os, sys
 sys.path.append(os.environ['HOME'])
+sys.path.append('/home/pi')
 # Now get the local settings
 from local_settings import *
