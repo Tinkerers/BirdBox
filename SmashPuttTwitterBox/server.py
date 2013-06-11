@@ -26,4 +26,4 @@ class Server(threading.Thread):
 		try:
 			cherrypy.quickstart(HelloWorld(self.queue))
 		except Exception as e:
-			self.logger.error("Exception in server: " + str(e))
+			self.logger.exception("Exception in server: " + str(e))

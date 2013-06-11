@@ -37,10 +37,10 @@ class Printer(threading.Thread):
 		else:
 			# blink/alternate lights
 			while (time.time() - t0 < LIGHT_RUN_TIME):
-				for i, pin in light_pins:
+				for i, pin in enumerate(light_pins):
 					GPIO.output(pin, (i+1) % 2)
 				time.sleep(LIGHT_BLINK_DELAY)
-				for i, pin in light_pins:
+				for i, pin in enumerate(light_pins):
 					GPIO.output(pin, i % 2)
 				time.sleep(LIGHT_BLINK_DELAY)
 
@@ -83,5 +83,5 @@ class Printer(threading.Thread):
 				self.queue.task_done()
 				self.logger.debug("Finished queue item. Queue size: %i" % self.queue.qsize())
 			except Exception as e:
-				self.logger.error("Exception in printer: " + str(e))
+				self.logger.exception("Exception in printer: " + str(e))
 

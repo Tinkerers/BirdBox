@@ -105,8 +105,7 @@ def main():
 				# 	for k,v in user_data.iteritems():
 				# 		queue.put((PRIORITY_LOW, k, v, False))
 		except Exception as e:
-			logger.error("Exception in main thread: " + str(e))
-			traceback.print_tb(sys.exc_info()[2])
+			logger.exception("Exception in main thread: " + str(e))
 
 		time.sleep(15)
 

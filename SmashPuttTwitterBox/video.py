@@ -110,5 +110,5 @@ class Video(threading.Thread):
 							msg = [1, "This is a test line 1", "message line 2", True]
 							self.parent_queue.put(msg)
 			except Exception as e:
-				self.logger.error("Exception in video: " + str(e))
+				self.logger.exception("Exception in video: " + str(e))
 

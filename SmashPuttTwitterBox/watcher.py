@@ -21,7 +21,7 @@ class Watcher(threading.Thread):
 			self.auth = tweepy.OAuthHandler(settings.CONSUMER_KEY, settings.CONSUMER_SECRET)
 			self.auth.set_access_token(settings.ACCESS_KEY, settings.ACCESS_SECRET)
 		except Exception as e:
-			self.logger.error("Could not authenticate: " + str(e))
+			self.logger.exception("Could not authenticate: " + str(e))
 
 	#----------------------------------------------------------------------
 	def get_api(self):
@@ -44,7 +44,7 @@ class Watcher(threading.Thread):
 				self.logger.debug("Sleeping for a minute to clear rate limit")
 				time.sleep(60)
 		except Exception as e:
-			self.logger.error("Disconnected from twitter: " + str(e))
+			self.logger.exception("Disconnected from twitter: " + str(e))
 
 	#----------------------------------------------------------------------
 	def getUserData(self):
@@ -55,5 +55,5 @@ class Watcher(threading.Thread):
 			user_data = {"@" + settings.SCREEN_NAME + ":": "Followers: " + str(user.followers_count)}
 			return user_data
 		except Exception as e:
-			self.logger.error("Could not get data for " + settings.SCREEN_NAME + ": " + str(e))
+			self.logger.exception("Could not get data for " + settings.SCREEN_NAME + ": " + str(e))
 
