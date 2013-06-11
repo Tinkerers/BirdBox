@@ -35,5 +35,8 @@ LIGHT_BLINK_DELAY = 0.2 # seconds. Set to 0 for solid on (no blink)
 PRIORITY_LOW = 10
 PRIORITY_HIGH = 1
 
+
+import os, sys
+sys.path.append(os.environ['HOME'])
 # Now get the local settings
 from local_settings import *
