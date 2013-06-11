@@ -12,6 +12,7 @@ DEBUG = False
 
 # Messages to display
 MSG_FILE = "messages.txt"
+SLIDE_TIME = 5 # seconds for each slide and non-alert message
 
 # Camera attached?
 CAMERA = True
@@ -24,12 +25,11 @@ BACKGROUND_COLOR = "black"
 
 
 # Where did you plug in the light?
-LIGHT_PIN = 4
-LIGHT_DELAY = 10
+LIGHT_PIN_1 = 22
+LIGHT_PIN_2 = 23 # set to None if there is only one light
+LIGHT_RUN_TIME = 10 # seconds to keep the light on
 
-# Timing constants
-E_PULSE = 0.00005
-E_DELAY = 0.00005
+LIGHT_BLINK_DELAY = 0.2 # seconds. Set to 0 for solid on (no blink)
 
 # Priority queue priorities
 PRIORITY_LOW = 10

@@ -19,6 +19,35 @@ class Printer(threading.Thread):
 		self.videoQueue = Queue.PriorityQueue(1)
 
 	#----------------------------------------------------------------------
+
+	def blink():
+		GPIO.output(LIGHT_PIN_1, GPIO.LOW)
+		GPIO.output(LIGHT_PIN_2, GPIO.LOW)
+		t0 = time.time()
+
+		light_pins = [LIGHT_PIN_1]
+		if (LIGHT_PIN_2):
+			light_pins << LIGHT_PIN_2
+
+		if (LIGHT_BLINK_DELAY == 0):
+			# No blinking
+			for pin in light_pins:
+				GPIO.output(pin, GPIO.HIGH)
+				time.sleep(LIGHT_RUN_TIME)
+		else:
+			# blink/alternate lights
+			while (time.time() - t0 < LIGHT_RUN_TIME):
+				for i, pin in light_pins:
+					GPIO.output(pin, (i+1) % 2)
+				time.sleep(LIGHT_BLINK_DELAY)
+				for i, pin in light_pins:
+					GPIO.output(pin, i % 2)
+				time.sleep(LIGHT_BLINK_DELAY)
+
+		for pin in light_pins:
+			GPIO.output(pin, GPIO.LOW)
+
+
 	def run(self):
 		video = None
 		while True:
@@ -44,16 +73,11 @@ class Printer(threading.Thread):
 				# If we should turn the light on, do it
 				if (alert):
 					if self.pi:
-						self.logger.debug("Light on...")
-						GPIO.output(LIGHT_PIN, GPIO.HIGH)
-
-					time.sleep(LIGHT_DELAY)
-
-					if self.pi:
-						self.logger.debug("Light off")
-						GPIO.output(LIGHT_PIN, GPIO.LOW)
+						blink()
+					else:
+						time.sleep(LIGHT_RUN_TIME)
 				else:
-					time.sleep(5)
+					time.sleep(SLIDE_TIME)
 
 				# All done!
 				self.queue.task_done()

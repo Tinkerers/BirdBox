@@ -45,8 +45,13 @@ def main():
 		GPIO.setmode(GPIO.BCM)	     # Use BCM GPIO numbers
 
 		# Setup the alert light
-		GPIO.setup(settings.LIGHT_PIN, GPIO.OUT) 
-		GPIO.output(settings.LIGHT_PIN, GPIO.LOW)
+		if settings.LIGHT_PIN_1:
+			GPIO.setup(settings.LIGHT_PIN_1, GPIO.OUT) 
+			GPIO.output(settings.LIGHT_PIN_1, GPIO.LOW)
+
+		if settings.LIGHT_PIN_2:
+			GPIO.setup(settings.LIGHT_PIN_2, GPIO.OUT) 
+			GPIO.output(settings.LIGHT_PIN_2, GPIO.LOW)
 
 
 	# The queue is where messages go to be displayed
