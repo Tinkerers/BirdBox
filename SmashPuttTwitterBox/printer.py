@@ -27,7 +27,7 @@ class Printer(threading.Thread):
 
 		light_pins = [LIGHT_PIN_1]
 		if (LIGHT_PIN_2):
-			light_pins << LIGHT_PIN_2
+			light_pins.append(LIGHT_PIN_2)
 
 		if (LIGHT_BLINK_DELAY == 0):
 			# No blinking
