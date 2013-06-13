@@ -138,9 +138,10 @@ class Video(threading.Thread):
 					else:
 						for index, line in enumerate(wrapped_text):
 							textSurface = self.font.render(line, True, self.foregroundColor)
+							width = textSurface.get_width()
 							shadowColor = self.black
 							shadow = self.font.render(line, True, shadowColor)
-							pos = (1, start_y + index * self.font.get_linesize())
+							pos = ((self.width - width)/2, start_y + index * self.font.get_linesize())
 							shadowOffset = 3
 							self.screen.blit(shadow, (pos[0]+shadowOffset, pos[1]+shadowOffset))
 							self.screen.blit(textSurface, pos)

@@ -45,7 +45,7 @@ LIGHT_BLINK_DELAY = 0.2 # seconds. Set to 0 for solid on (no blink)
 PRIORITY_LOW = 10
 PRIORITY_HIGH = 1
 
-FAKE_TWEET = "@fakeuser: Check out this cool twitter box!"
+FAKE_TWEET = "@%s: Check out this cool twitter box!" % SCREEN_NAME
 
 
 import os, sys
