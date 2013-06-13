@@ -36,7 +36,13 @@ SERVER_PORT = 80
 LIGHT_PIN_1 = 22
 LIGHT_PIN_2 = 23 # set to None if there is only one light
 LIGHT_RUN_TIME = 10 # seconds to keep the light on
-ALERT_DISPLAY_TIME = 10 # seconds to keep the alert message on screen
+
+# seconds to keep the alert message on screen
+# When using the "type" effect it takes 12.8 seconds to type
+# out a maximum-length tweet, so be aware that longer tweets
+# may get cut off if you make this too short.
+ALERT_DISPLAY_TIME = 15
+
 TEXT_EFFECT = 'blink' # or 'type'
 
 LIGHT_BLINK_DELAY = 0.2 # seconds. Set to 0 for solid on (no blink)
