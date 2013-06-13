@@ -66,6 +66,7 @@ class Printer(threading.Thread):
 				line1 = msg[1]
 				line2 = msg[2]
 				alert = msg[3]
+				t0 = time.time()
 
 				if priority == PRIORITY_HIGH:
 					self.logger.info(line1 + " " + line2)
@@ -76,6 +77,10 @@ class Printer(threading.Thread):
 						self.blink()
 					else:
 						time.sleep(LIGHT_RUN_TIME)
+
+					remaining_time = t0 + ALERT_DISPLAY_TIME - time.time()
+					if(remaining_time > 0):
+						time.sleep(remaining_time)
 				else:
 					time.sleep(SLIDE_TIME)
 

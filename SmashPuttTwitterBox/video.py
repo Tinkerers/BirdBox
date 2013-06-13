@@ -5,6 +5,8 @@ import os
 from textwrap import *
 from pygame import time
 
+SLIDE = '__SLIDE__'
+
 import settings
 if settings.CAMERA:
 	from pygame import camera
@@ -16,6 +18,8 @@ class Video(threading.Thread):
 		self.queue = queue
 		self.parent_queue = parent_queue
 		self.logger.debug("Video created")
+		self.is_slide = False
+		self.slide = None
 
 		self.text = "Welcome!"
 
@@ -28,7 +32,6 @@ class Video(threading.Thread):
 		flags = 0 #pygame.DOUBLEBUF | pygame.HWSURFACE | pygame.FULLSCREEN
 		self.screen = pygame.display.set_mode((self.width, self.height), flags)
 		font_size = settings.FONT_SIZE
-		font_width = font_size * 0.68956
 		font_width = font_size * 0.7
 		self.font = pygame.font.SysFont(settings.FONT, font_size, bold=1)
 		self.line_length = self.width/font_width
@@ -41,12 +44,16 @@ class Video(threading.Thread):
 			self.c.start()
 			self.surface = pygame.Surface(camera_size)
 		self.bigSurface = None
-		self.pause = False
+		self.alert = False
 
 		self.foregroundColor = pygame.Color(settings.FONT_COLOR)
 		self.backgroundColor = pygame.Color(settings.BACKGROUND_COLOR)
 		self.black = pygame.Color(0, 0, 0, 100)
 		self.shadowShade = 0
+
+		self.background_image = None
+		if settings.BACKGROUND_IMAGE:
+			self.background_image = pygame.image.load(settings.BACKGROUND_IMAGE)
 
 	def run(self):
 		new_text = False
@@ -59,17 +66,22 @@ class Video(threading.Thread):
 					priority = msg[0]
 					line1 = msg[1]
 					line2 = msg[2]
-					alert = msg[3]
-					self.pause = alert
+					self.is_slide = line2 == SLIDE
+					if self.is_slide:
+						filename = line1
+						self.slide = pygame.image.load(filename)
+
+					self.alert = msg[3]
 					self.text = line1 + ' ' + line2
 					new_text = True
 					self.queue.task_done()
+					t0 = time.get_ticks()
 				except Queue.Empty:
 					False
 					#self.logger.debug("Video queue empty")
 
 
-				if new_text or not self.pause:
+				if new_text or not self.alert:
 					new_text = False
 					if settings.CAMERA:
 						if self.c.query_image():
@@ -84,19 +96,55 @@ class Video(threading.Thread):
 					if self.bigSurface != None:
 						self.screen.blit(self.bigSurface, (0,0))
 
-				if self.text != None:
+				if self.background_image:
+					self.screen.blit(self.background_image, (0,0))
+
+				if self.is_slide:
+					self.screen.blit(self.slide, (0,0))
+
+				elif self.text != None:
 					wrapped_text = wrap(self.text, self.line_length)
-					for index, line in enumerate(wrapped_text):
-						textSurface = self.font.render(line, True, self.foregroundColor)
-						shadowColor = self.black
-						if self.pause:
-							self.shadowShade = (self.shadowShade + 3) % 255
-							shadowColor = pygame.Color(self.shadowShade, self.shadowShade, self.shadowShade)
-						shadow = self.font.render(line, True, shadowColor)
-						pos = (1,index * self.font.get_linesize())
-						shadowOffset = 3
-						self.screen.blit(shadow, (pos[0]+shadowOffset, pos[1]+shadowOffset))
-						self.screen.blit(textSurface, pos)
+					# center text vertically
+					start_y = (self.height - (len(wrapped_text) * self.font.get_linesize())) / 2 
+					if self.alert:
+						if settings.TEXT_EFFECT == 'blink':
+							for index, line in enumerate(wrapped_text):
+								textSurface = self.font.render(line, True, self.foregroundColor)
+								self.shadowShade = (self.shadowShade + 3) % 255
+								shadowColor = pygame.Color(self.shadowShade, self.shadowShade, self.shadowShade)
+								shadow = self.font.render(line, True, shadowColor)
+								pos = (1, start_y + index * self.font.get_linesize())
+								shadowOffset = 3
+								self.screen.blit(shadow, (pos[0]+shadowOffset, pos[1]+shadowOffset))
+								self.screen.blit(textSurface, pos)
+						elif settings.TEXT_EFFECT == 'type':
+							t0 = time.get_ticks()
+							for index, line in enumerate(wrapped_text):
+								for caret in range(len(line)):
+									current_part = line[0:caret+1]
+									textSurface = self.font.render(current_part, True, self.foregroundColor)
+									shadowColor = self.black
+									shadow = self.font.render(current_part, True, shadowColor)
+									pos = (1, start_y + index * self.font.get_linesize())
+									shadowOffset = 3
+									self.screen.blit(shadow, (pos[0]+shadowOffset, pos[1]+shadowOffset))
+									self.screen.blit(textSurface, pos)
+									pygame.display.update()
+									time.wait(80)						
+							while(t0 + settings.ALERT_DISPLAY_TIME*1000 - time.get_ticks() > 0):
+								# keep the display updated while we wait
+								pygame.display.update()
+								self.clock.tick(30)
+					else:
+						for index, line in enumerate(wrapped_text):
+							textSurface = self.font.render(line, True, self.foregroundColor)
+							shadowColor = self.black
+							shadow = self.font.render(line, True, shadowColor)
+							pos = (1, start_y + index * self.font.get_linesize())
+							shadowOffset = 3
+							self.screen.blit(shadow, (pos[0]+shadowOffset, pos[1]+shadowOffset))
+							self.screen.blit(textSurface, pos)
+
 
 				pygame.display.update()
 				

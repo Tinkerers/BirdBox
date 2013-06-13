@@ -13,6 +13,7 @@ import os
 from watcher import Watcher
 from printer import Printer
 from server import Server
+from video import SLIDE
 import sys
 import traceback
 import settings
@@ -88,22 +89,15 @@ def main():
 
 
 			# Throw some info in the queue if it's getting low
-			if queue.qsize() == 0:
+			if queue.qsize() < 1:
 				messages = open(settings.MSG_FILE, 'r')
 				for msg in messages:
 					queue.put((settings.PRIORITY_LOW, msg, "", False))
 				messages.close()
-				
-				# Switching to using the message file instead of this generated msg
-				#for w in settings.TRACK:
-				#	queue.put((settings.PRIORITY_LOW, "Watching for:", w, False))
-				
-				# We are not tracking the number of followers for this event
-				# This frees up an extra twitter connection to avoid rate limiting --JLS
-				# user_data = watcher.getUserData()
-				# if user_data != None:
-				# 	for k,v in user_data.iteritems():
-				# 		queue.put((PRIORITY_LOW, k, v, False))
+
+				if settings.SLIDE_DIR:
+					for filename in os.listdir(settings.SLIDE_DIR):
+						queue.put((settings.PRIORITY_LOW, os.path.join(settings.SLIDE_DIR, filename), SLIDE, False))
 		except Exception as e:
 			logger.exception("Exception in main thread: " + str(e))
 

@@ -14,6 +14,11 @@ DEBUG = False
 MSG_FILE = "messages.txt"
 SLIDE_TIME = 5 # seconds for each slide and non-alert message
 
+# Directory to pull slides from
+# Slides should be 1024 by 768 image files
+# Set to None for no slides
+SLIDE_DIR = None
+
 # Camera attached?
 CAMERA = True
 
@@ -22,18 +27,25 @@ FONT = "Droid Sans Mono"
 FONT_SIZE = 60
 FONT_COLOR = "red"
 BACKGROUND_COLOR = "black"
+# a filename to use as a background for the text messages
+BACKGROUND_IMAGE = None
 
+SERVER_PORT = 80
 
 # Where did you plug in the light?
 LIGHT_PIN_1 = 22
 LIGHT_PIN_2 = 23 # set to None if there is only one light
 LIGHT_RUN_TIME = 10 # seconds to keep the light on
+ALERT_DISPLAY_TIME = 10 # seconds to keep the alert message on screen
+TEXT_EFFECT = 'blink' # or 'type'
 
 LIGHT_BLINK_DELAY = 0.2 # seconds. Set to 0 for solid on (no blink)
 
 # Priority queue priorities
 PRIORITY_LOW = 10
 PRIORITY_HIGH = 1
+
+FAKE_TWEET = "@fakeuser: Check out this cool twitter box!"
 
 
 import os, sys
