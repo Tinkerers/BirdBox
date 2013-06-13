@@ -32,9 +32,7 @@ class Video(threading.Thread):
 		flags = 0 #pygame.DOUBLEBUF | pygame.HWSURFACE | pygame.FULLSCREEN
 		self.screen = pygame.display.set_mode((self.width, self.height), flags)
 		font_size = settings.FONT_SIZE
-		font_width = font_size * 0.7
 		self.font = pygame.font.SysFont(settings.FONT, font_size, bold=1)
-		self.line_length = self.width/font_width
 
 
 		if settings.CAMERA:
@@ -55,8 +53,53 @@ class Video(threading.Thread):
 		if settings.BACKGROUND_IMAGE:
 			self.background_image = pygame.image.load(settings.BACKGROUND_IMAGE)
 
+	def blit_background(self):
+		if not self.alert:
+			if settings.CAMERA:
+				if self.c.query_image():
+					self.c.get_image(self.surface)
+					self.surface = pygame.transform.flip(self.surface, True, False)
+					self.bigSurface = pygame.transform.scale(self.surface, (self.width, self.height))
+			else:
+				self.bigSurface = pygame.Surface((self.width, self.height))
+				self.bigSurface.fill(self.backgroundColor)
+
+		if self.bigSurface != None:
+			self.screen.blit(self.bigSurface, (0,0))
+
+		if self.background_image:
+			self.screen.blit(self.background_image, (0,0))
+
+		if self.is_slide:
+			self.screen.blit(self.slide, (0,0))
+		
+	def truncline(self, text, font, maxwidth):
+		"""Truncates a single line of text to given pixel size."""
+		real=len(text)
+		stext=text
+		l=font.size(text)[0]
+		a=0
+		done=1
+		while l > maxwidth: 
+			a=a+1
+			stext=text.rsplit(None, a)[0]
+			l=font.size(stext)[0]
+			real=len(stext)
+			done=0
+		return real, done, stext
+			
+	def wrapline(self, text, font, maxwidth):
+		"""Wraps text line by word by word into multiple lines to fit given pixel size."""
+		done=0
+		wrapped=[]
+		
+		while not done: 
+			nl, done, stext=self.truncline(text, font, maxwidth)
+			wrapped.append(stext.strip())
+			text=text[nl:]
+		return wrapped
+
 	def run(self):
-		new_text = False
 		while True:
 			# Set frame rate
 			self.clock.tick(30)
@@ -73,37 +116,16 @@ class Video(threading.Thread):
 
 					self.alert = msg[3]
 					self.text = line1 + ' ' + line2
-					new_text = True
 					self.queue.task_done()
 					t0 = time.get_ticks()
 				except Queue.Empty:
 					False
 					#self.logger.debug("Video queue empty")
 
+				self.blit_background()
 
-				if new_text or not self.alert:
-					new_text = False
-					if settings.CAMERA:
-						if self.c.query_image():
-							self.c.get_image(self.surface)
-							self.logger.debug( "Captured image")
-							self.surface = pygame.transform.flip(self.surface, True, False)
-							self.bigSurface = pygame.transform.scale(self.surface, (self.width, self.height))
-					else:
-						self.bigSurface = pygame.Surface((self.width, self.height))
-						self.bigSurface.fill(self.backgroundColor)
-
-					if self.bigSurface != None:
-						self.screen.blit(self.bigSurface, (0,0))
-
-				if self.background_image:
-					self.screen.blit(self.background_image, (0,0))
-
-				if self.is_slide:
-					self.screen.blit(self.slide, (0,0))
-
-				elif self.text != None:
-					wrapped_text = wrap(self.text, self.line_length)
+				if not self.is_slide and self.text != None:
+					wrapped_text = self.wrapline(self.text, self.font, self.width)
 					# center text vertically
 					start_y = (self.height - (len(wrapped_text) * self.font.get_linesize())) / 2 
 					if self.alert:
@@ -119,6 +141,7 @@ class Video(threading.Thread):
 								self.screen.blit(textSurface, pos)
 						elif settings.TEXT_EFFECT == 'type':
 							t0 = time.get_ticks()
+							self.blit_background()
 							for index, line in enumerate(wrapped_text):
 								for caret in range(len(line)):
 									current_part = line[0:caret+1]
@@ -156,7 +179,7 @@ class Video(threading.Thread):
 						os._exit(0)
 					if event.type == pygame.KEYDOWN:
 						if event.key == pygame.K_t:
-							msg = [1, "This is a test line 1", "message line 2", True]
+							msg = [1, settings.FAKE_TWEET, "", True]
 							self.parent_queue.put(msg)
 			except Exception as e:
 				self.logger.exception("Exception in video: " + str(e))
