@@ -1,21 +1,28 @@
 import threading
 import settings
-import cherrypy
+from cherrypy import *
+import os
+from mako.template import Template
+from mako.lookup import TemplateLookup
+lookup = TemplateLookup(directories=['template'])
 
-cherrypy.config.update({'server.socket_host': '0.0.0.0',
-                        'server.socket_port': 80,
-                       })
+config.update({'server.socket_host': '0.0.0.0',
+						'server.socket_port': settings.SERVER_PORT,
+					   })
 
 class HelloWorld:
 	def __init__(self, queue):
 		self.queue = queue
 
 	def index(self):
-		return "Hello world! queue size is %i" % self.queue.qsize()
+		tmpl = lookup.get_template("index.html")
+		return tmpl.render(size=self.queue.qsize())
 	index.exposed = True
 
 	def trigger(self):
-		self.queue.put((settings.PRIORITY_HIGH, "@fakeuser" + ":", "Check it out dudes! I totally tweeted!", True))
+		if request.method == 'POST':
+			self.queue.put((settings.PRIORITY_HIGH, settings.FAKE_TWEET, "", True))
+		raise HTTPRedirect('/')
 	trigger.exposed = True	
 	
 class Server(threading.Thread):
@@ -27,6 +34,15 @@ class Server(threading.Thread):
 
 	def run(self):
 		try:
-			cherrypy.quickstart(HelloWorld(self.queue))
+			conf = {'/':
+				{
+					'tools.staticdir.root': os.path.join(os.path.abspath(os.curdir)),
+					'tools.staticdir.on': True,
+					'tools.staticdir.dir': "static",
+				}
+			}
+			tree.mount(HelloWorld(self.queue), '/', conf)
+			engine.start()
+			engine.block()
 		except Exception as e:
 			self.logger.exception("Exception in server: " + str(e))
