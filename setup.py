@@ -13,6 +13,7 @@ setup(
     install_requires=[
         'tweepy',
         'cherrypy',
+        'mako'
         # 'pygame',
     ],
     extras_require={

@@ -36,7 +36,7 @@ class Server(threading.Thread):
 		try:
 			conf = {'/':
 				{
-					'tools.staticdir.root': os.path.join(os.path.abspath(os.curdir)),
+					'tools.staticdir.root': os.path.abspath(os.path.join(__file__, '..')),
 					'tools.staticdir.on': True,
 					'tools.staticdir.dir': "static",
 				}
