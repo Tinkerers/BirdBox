@@ -15,7 +15,7 @@ class HelloWorld:
 		self.queue = queue
 
 	def index(self):
-		tmpl = lookup.get_template("index.html")
+		tmpl = lookup.get_template(os.path.join(os.path.abspath(__file__), "index.html"))
 		return tmpl.render(size=self.queue.qsize())
 	index.exposed = True
 
