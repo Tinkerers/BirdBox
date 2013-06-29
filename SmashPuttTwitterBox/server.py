@@ -15,7 +15,7 @@ class HelloWorld:
 		self.queue = queue
 
 	def index(self):
-		tmpl = lookup.get_template(os.path.join(os.path.abspath(__file__), "index.html"))
+		tmpl = lookup.get_template("index.html")
 		return tmpl.render(size=self.queue.qsize())
 	index.exposed = True
 
@@ -34,11 +34,13 @@ class Server(threading.Thread):
 
 	def run(self):
 		try:
+			this_dir = os.path.abspath(os.path.join(__file__, '..'))
 			conf = {'/':
 				{
-					'tools.staticdir.root': os.path.abspath(os.path.join(__file__, '..')),
+					'tools.staticdir.root': this_dir,
 					'tools.staticdir.on': True,
 					'tools.staticdir.dir': "static",
+					'tools.make.directories': os.path.join(this_dir, 'template')
 				}
 			}
 			tree.mount(HelloWorld(self.queue), '/', conf)
