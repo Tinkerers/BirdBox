@@ -4,7 +4,8 @@ from cherrypy import *
 import os
 from mako.template import Template
 from mako.lookup import TemplateLookup
-lookup = TemplateLookup(directories=['template'])
+this_dir = os.path.abspath(os.path.join(__file__, '..'))
+lookup = TemplateLookup(directories=[os.path.join(this_dir, 'template')])
 
 config.update({'server.socket_host': '0.0.0.0',
 						'server.socket_port': settings.SERVER_PORT,
@@ -34,13 +35,11 @@ class Server(threading.Thread):
 
 	def run(self):
 		try:
-			this_dir = os.path.abspath(os.path.join(__file__, '..'))
 			conf = {'/':
 				{
 					'tools.staticdir.root': this_dir,
 					'tools.staticdir.on': True,
 					'tools.staticdir.dir': "static",
-					'tools.mako.directories': os.path.join(this_dir, 'template')
 				}
 			}
 			tree.mount(HelloWorld(self.queue), '/', conf)
