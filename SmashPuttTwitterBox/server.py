@@ -40,7 +40,7 @@ class Server(threading.Thread):
 					'tools.staticdir.root': this_dir,
 					'tools.staticdir.on': True,
 					'tools.staticdir.dir': "static",
-					'tools.make.directories': os.path.join(this_dir, 'template')
+					'tools.mako.directories': os.path.join(this_dir, 'template')
 				}
 			}
 			tree.mount(HelloWorld(self.queue), '/', conf)
