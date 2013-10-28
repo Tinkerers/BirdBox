@@ -81,11 +81,12 @@ def main():
 				printer.setDaemon(True)
 				printer.start()
 
-			if not server or not server.is_alive():
-				logger.info("Starting HTTP server")
-				server = Server(queue, logger)
-				server.setDaemon(True)
-				server.start()
+			if settings.HTTP_SERVER:
+				if not server or not server.is_alive():
+					logger.info("Starting HTTP server")
+					server = Server(queue, logger)
+					server.setDaemon(True)
+					server.start()
 
 
 			# Throw some info in the queue if it's getting low

@@ -27,8 +27,8 @@ class Video(threading.Thread):
 		pygame.init()
 		self.clock = time.Clock();
 		pygame.mouse.set_visible(False)
-		self.width = 1024
-		self.height = 768
+		self.width = settings.SCREEN_WIDTH
+		self.height = settings.SCREEN_HEIGHT
 		flags = 0 #pygame.DOUBLEBUF | pygame.HWSURFACE | pygame.FULLSCREEN
 		self.screen = pygame.display.set_mode((self.width, self.height), flags)
 		font_size = settings.FONT_SIZE
