@@ -12,7 +12,7 @@ import time
 import os
 from watcher import Watcher
 from printer import Printer
-from server import Server
+from httpd.server import Server
 from video import SLIDE
 import sys
 import traceback
