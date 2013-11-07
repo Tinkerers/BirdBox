@@ -1,0 +1,5 @@
+pygame
+tweepy
+RPi.GPIO
+cherrypy
+mako

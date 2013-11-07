@@ -1,11 +1,8 @@
 # Tinkerers of Office Nomads
-# Bird Box - Twitter Alert Board
 
-## Required Libraries
- * sudo apt-get install pygame
- * Tweepy: http://tweepy.github.com
- * GPIO Libraries:  http://pypi.python.org/pypi/RPi.GPIO
- * Pygame: http://pygame.org/download.shtml
+## Bird Box - Twitter Alert Board
 
-## Settings
-Create a file `local_settings.py` and copy keys you want to change from `settings.py`.
+### Setup
+ * sudo pip install -r requirements.txt
+ * cp settings.py local_settings.py
+ * sudo python ./main.py
