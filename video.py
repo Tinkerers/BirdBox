@@ -15,9 +15,9 @@ class Video(threading.Thread):
 	def __init__(self, logger, queue, parent_queue):
 		threading.Thread.__init__(self)
 		self.logger = logger
+		self.logger.debug("Creating video...")
 		self.queue = queue
 		self.parent_queue = parent_queue
-		self.logger.debug("Video created")
 		self.is_slide = False
 		self.slide = None
 
@@ -52,6 +52,7 @@ class Video(threading.Thread):
 		self.background_image = None
 		if settings.BACKGROUND_IMAGE:
 			self.background_image = pygame.image.load(settings.BACKGROUND_IMAGE)
+		self.logger.debug("Video created")
 
 	def blit_background(self):
 		if not self.alert:

@@ -29,7 +29,10 @@ FONT_COLOR = "red"
 BACKGROUND_COLOR = "black"
 # a filename to use as a background for the text messages
 BACKGROUND_IMAGE = None
+SCREEN_WIDTH = 1024
+SCREEN_HEIGHT = 768
 
+HTTP_SERVER = True
 SERVER_PORT = 80
 
 # Where did you plug in the light?
